@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpSideDown Chat</title>
+</head>
+<body>
+    <h3 style="position: fixed; top: 0; left: 0;">Status : <i id="status">CONNECTING . . .</i> </h3>
+    <button id="send_msg" disabled style="position: fixed; top: 0; right: 0; font-size: large;">Send</button>
+    <main id="main" style="position: absolute; top: 40px; right: 0;">
+        <div style="text-align: right; width: 75%;">
+            <textarea id="chat_text" placeholder="enter your message here" cols="100" rows="2"></textarea>
+        </div>
+        <div id="alice" style="text-align: right; width: 75%;">
+            <button id="get_alice">get_alice</button>
+        </div>
+        <div id="alice" style="text-align: right; width: 75%;">
+            <button id="get_alice_n_me">get_alice_n_me</button>
+        </div>
+    </main>
+</body>
+</html>
+<script>
+    const main = document.getElementById('main'),
+    status = document.getElementById('status'),
+    send_msg = document.getElementById('send_msg'),
+    chat_text = document.getElementById('chat_text'),
+    get_alice = document.getElementById('get_alice'),
+    get_alice_n_me = document.getElementById('get_alice_n_me')
+</script>
+<script src="./src/socket.io.js"></script>
+<script type="module">
+    import {ChatLines, ChatSystem} from "./src/index.js"
+
+    //create an instance of ChatSystem
+    const cs = new ChatSystem()
+
+    //connect to chat server, the function will return promise, which is resolved when autorization is complete
+    cs.connect_and_authorize()
+    .then(when_connected)
+
+    function when_connected() {
+        status.innerText = 'CONNECTED'
+        send_msg.removeAttribute('disabled')
+    }
+
+    send_msg.addEventListener('click', async (event)=>{
+        send_msg.disabled = true
+        const message = new ChatLines('alice')
+        message.add_line_text(chat_text.value)
+        const message_res = await cs.send_msg(message)
+        alert(JSON.stringify(message_res))
+        send_msg.removeAttribute('disabled')
+    })
+
+    get_alice.addEventListener('click', async (event)=>{
+        const message_res = await cs.get_messages_oneway_pleanty_of_sender('alice')
+        console.log(JSON.stringify(message_res))
+    })
+
+    get_alice_n_me.addEventListener('click', async (event)=>{
+        const message_res = await cs.get_messages_bothway_pleanty_of_sender('alice')
+        console.log(JSON.stringify(message_res))
+    })
+</script>
