@@ -18,6 +18,9 @@
         <div id="alice" style="text-align: right; width: 75%;">
             <button id="get_alice_n_me">get_alice_n_me</button>
         </div>
+        <div id="alice" style="text-align: right; width: 75%;">
+            <button id="get_alice_post">get_123456_post</button>
+        </div>
     </main>
 </body>
 </html>
@@ -27,7 +30,8 @@
     send_msg = document.getElementById('send_msg'),
     chat_text = document.getElementById('chat_text'),
     get_alice = document.getElementById('get_alice'),
-    get_alice_n_me = document.getElementById('get_alice_n_me')
+    get_alice_n_me = document.getElementById('get_alice_n_me'),
+    get_alice_post = document.getElementById('get_alice_post')
 </script>
 <script src="./src/socket.io.js"></script>
 <script type="module">
@@ -47,7 +51,7 @@
 
     send_msg.addEventListener('click', async (event)=>{
         send_msg.disabled = true
-        const message = new ChatLines('alice')
+        const message = new ChatLines('123456')
         message.add_line_text(chat_text.value)
         const message_res = await cs.send_msg(message)
         alert(JSON.stringify(message_res))
@@ -61,6 +65,11 @@
 
     get_alice_n_me.addEventListener('click', async (event)=>{
         const message_res = await cs.get_messages_bothway_pleanty_of_sender('alice')
+        console.log(JSON.stringify(message_res))
+    })
+
+    get_alice_post.addEventListener('click', async (event)=>{
+        const message_res = await cs.get_messages_oneway_post_id_of_sender('123456', 27)
         console.log(JSON.stringify(message_res))
     })
 </script>

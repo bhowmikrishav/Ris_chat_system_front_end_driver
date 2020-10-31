@@ -101,6 +101,48 @@ class ChatSystem{
         })
     }
 
+    get_messages_bothway_range_id_of_sender(sender_id, id_onwards, id_untill){//untested
+        const this_class = this
+        return new Promise((resolve, reject)=>{
+            try{
+                //adding req_id and storing reference in request (YES REF SYSTEM IS PRESEREVED)
+                const request = {req_id:this_class.#get_new_request_index(), sender_id, id_onwards, id_untill}
+                //sending the message
+                this_class.socket.emit('get_messages_bothway_range_id_of_sender', request)
+                console.log("lookin for", 'get_messages_bothway_range_id_of_sender/'+request.req_id);
+                //adding event listener
+                this_class.socket.on('get_messages_bothway_range_id_of_sender/'+request.req_id, (data)=>{
+                    resolve(data)
+                    //removing the event listener
+                    this_class.socket.off('get_messages_bothway_range_id_of_sender/'+request.req_id)
+                })
+            }catch(e){
+                reject(e)
+            }
+        })
+    }
+
+    get_messages_oneway_post_id_of_sender(sender_id, id_onwards){//untested
+        const this_class = this
+        return new Promise((resolve, reject)=>{
+            try{
+                //adding req_id and storing reference in request (YES REF SYSTEM IS PRESEREVED)
+                const request = {req_id:this_class.#get_new_request_index(), sender_id, id_onwards}
+                //sending the message
+                this_class.socket.emit('get_messages_oneway_post_id_of_sender', request)
+                console.log("lookin for", 'get_messages_oneway_post_id_of_sender/'+request.req_id);
+                //adding event listener
+                this_class.socket.on('get_messages_oneway_post_id_of_sender/'+request.req_id, (data)=>{
+                    resolve(data)
+                    //removing the event listener
+                    this_class.socket.off('get_messages_oneway_post_id_of_sender/'+request.req_id)
+                })
+            }catch(e){
+                reject(e)
+            }
+        })
+    }
+
     #get_new_request_index = ()=>{
         return this.request_index = (this.request_index+1) % 50000000
     }
