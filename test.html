@@ -13,6 +13,9 @@
             <textarea id="chat_text" placeholder="enter your message here" cols="100" rows="2"></textarea>
         </div>
         <div id="alice" style="text-align: right; width: 75%;">
+            <button id="add_file">Add File in Message</button>
+        </div>
+        <div id="alice" style="text-align: right; width: 75%;">
             <button id="get_alice">get_alice</button>
         </div>
         <div id="alice" style="text-align: right; width: 75%;">
@@ -31,18 +34,19 @@
     chat_text = document.getElementById('chat_text'),
     get_alice = document.getElementById('get_alice'),
     get_alice_n_me = document.getElementById('get_alice_n_me'),
-    get_alice_post = document.getElementById('get_alice_post')
+    get_alice_post = document.getElementById('get_alice_post'),
+    add_file = document.getElementById('add_file')
 </script>
 <script src="./src/socket.io.js"></script>
 <script type="module">
-    import {ChatLines, ChatSystem} from "./src/index.js"
+    import {ChatLines, ChatSystem, FileStore} from "./src/index.js"
 
     //create an instance of ChatSystem
     const cs = new ChatSystem()
 
     //connect to chat server, the function will return promise, which is resolved when autorization is complete
-    cs.connect_and_authorize()
-    .then(when_connected)
+    //cs.connect_and_authorize()
+    //.then(when_connected)
 
     function when_connected() {
         status.innerText = 'CONNECTED'
@@ -72,4 +76,15 @@
         const message_res = await cs.get_messages_oneway_post_id_of_sender('123456', 27)
         console.log(JSON.stringify(message_res))
     })
+
+    add_file.addEventListener('click', async (event) => {
+        //const res = await FileStore.choose_file_n_upload()
+        //console.log(res);
+        const cl = new ChatLines('507f191e810c19729de860ea')
+        cl.add_line_file_auto_user_input_sync()
+        .then(()=>{
+            console.log(cl.lines);
+        })
+    })
+
 </script>
