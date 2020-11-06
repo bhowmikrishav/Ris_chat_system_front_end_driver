@@ -66,12 +66,7 @@ class FileStore{
                 const form = new FormData()
                 //remove default owner when jwt is done
                 form.append('user_token', user_token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlveW8iLCJ1c2VySWQiOiI1MDdmMTkxZTgxMGMxOTcyOWRlODYwZWEiLCJpYXQiOjE2MDMzNjMzMDh9.8vK77Keb0mw8JbztljIEMb384wu7BL-T3wwU1dhggN4")
-                form.append('file', new Blob([evt.target.result],
-                    {
-                        type: this_file[0].type,
-                        name: this_file[0].name
-                    }
-                ), this_file[0].name)
+                form.append('file', blob, fname)
                 oReq.send(form)
 
             }catch(e){
