@@ -122,7 +122,7 @@ class ChatSystem{
             throw e
         }
     }
-    connect_and_authorize( user_token = {_id:'123456'} ){
+    connect_and_authorize( user_token = {_id:'alice'} ){
         const this_class = this
         return new Promise((resolve, reject)=>{
             try {
@@ -151,6 +151,27 @@ class ChatSystem{
                     resolve(data)
                     //removing the event listener
                     this_class.socket.off('send_msg/'+request.req_id)
+                })
+            }catch(e){
+                reject(e)
+            }
+        })
+    }
+
+    get_messages_bothway_post_id(id_onwards){
+        const this_class = this
+        return new Promise((resolve, reject)=>{
+            try{
+                //adding req_id and storing reference in request (YES REF SYSTEM IS PRESEREVED)
+                const request = {req_id:this_class.#get_new_request_index(), id_onwards}
+                //sending the message
+                this_class.socket.emit('get_messages_bothway_post_id', request)
+                console.log("lookin for", 'get_messages_bothway_post_id/'+request.req_id);
+                //adding event listener
+                this_class.socket.on('get_messages_bothway_post_id/'+request.req_id, (data)=>{
+                    resolve(data)
+                    //removing the event listener
+                    this_class.socket.off('get_messages_bothway_post_id/'+request.req_id)
                 })
             }catch(e){
                 reject(e)

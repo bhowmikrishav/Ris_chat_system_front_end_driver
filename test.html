@@ -24,6 +24,9 @@
         <div id="alice" style="text-align: right; width: 75%;">
             <button id="get_alice_post">get_123456_post</button>
         </div>
+        <div id="alice" style="text-align: right; width: 75%;">
+            <button id="everthing">everthing for me I am pro</button>
+        </div>
     </main>
 </body>
 </html>
@@ -35,7 +38,8 @@
     get_alice = document.getElementById('get_alice'),
     get_alice_n_me = document.getElementById('get_alice_n_me'),
     get_alice_post = document.getElementById('get_alice_post'),
-    add_file = document.getElementById('add_file')
+    add_file = document.getElementById('add_file'),
+    everthing = document.getElementById('everthing')
 </script>
 <script src="./src/socket.io.js"></script>
 <script type="module">
@@ -45,8 +49,8 @@
     const cs = new ChatSystem()
 
     //connect to chat server, the function will return promise, which is resolved when autorization is complete
-    //cs.connect_and_authorize()
-    //.then(when_connected)
+    cs.connect_and_authorize()
+    .then(when_connected)
 
     function when_connected() {
         status.innerText = 'CONNECTED'
@@ -87,4 +91,8 @@
         })
     })
 
+    everthing.addEventListener('click', async (event) => {
+        const message_res = await cs.get_messages_bothway_post_id(3)
+        console.log(JSON.stringify(message_res))
+    })
 </script>
